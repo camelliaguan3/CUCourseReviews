@@ -1,4 +1,4 @@
-# DB File
+# minor update, added text of review to Review Class 
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -29,12 +29,12 @@ class Course(db.Model):
 class Review(db.Model): 
   __tablename__ = 'review'
   id = db.Column(db.Integer, primary_key = True)
-  # nullable=True ??
   student_name= db.Column(db.String)
   course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
   rating = db.Column(db.Integer, nullable=False)
   # hours_per_week = nullable??
   hours_per_week = db.Column(db.Integer, nullable=False)
+  review = db.Column(db.String, nullable=False)
 
   def __init__(self, **kwargs):
     self.student_name = kwargs.get('student_name')
@@ -50,4 +50,3 @@ class Review(db.Model):
       "rating": self.rating, 
       "hours_per_week": self.hours_per_week
     }
-
