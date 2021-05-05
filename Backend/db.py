@@ -1,3 +1,5 @@
+# DB File
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -48,3 +50,4 @@ class Review(db.Model):
       "rating": self.rating, 
       "hours_per_week": self.hours_per_week
     }
+
