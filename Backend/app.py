@@ -38,23 +38,26 @@ def get_course_by_id(course_id):
 
     return success_response(course.serialize())
 
-@app.route("/api/courses/<int:prefix_id>/")
-# Returns dictionary of all courses with the prefix of prefix_id
-def get_course_by_prefix(prefix_id):
-    course = Course.query.filter_by(prefix=prefix_id)  
-    if course is None:
-        return failure_response("Course not found.")
+# @app.route("/api/courses/prefix/<int:prefix_id>/")
+# # Returns dictionary of all courses with the prefix of prefix_id
+# def get_course_by_prefix(prefix_id):
+#     course = Course.query.filter_by(prefix=prefix_id)  
+#     if course is None:
+#         return failure_response("Course not found.")
     
-    courses = []
-    for i in course:
-        courses += course.serialize()
+#     courses = []
+#     for i in course:
+#         courses += course.serialize()
 
-    return success_response(course.serialize())
+#     return success_response(course.serialize())
 
-@app.route("/api/courses/<int:code_id>/")
-# Returns dictionary of all courses with the code of code_id
-def get_course_by_code(code_id):
-    course = Course.query.filter_by(code=int(code_id))
+@app.route("/api/courses/prefix=<int:prefix_id>&code=<int:code_id>/")
+# Returns dictionary of all courses with the code of code_id and prefix of prefix_id
+def get_course_by_code(prefix_id, code_id):
+    if prefix is None and code is None:
+        return failure_response("No code or prefix specified.")
+    
+    course = Course.query.filter_by(prefix=prefix_id, code=int(code_id))
     if course is None:
         return failure_response("Course not found.")
 
@@ -67,19 +70,19 @@ def get_course_by_code(code_id):
 @app.route("/api/courses/", methods=["POST"])
 def create_course(): # use preexisting database or create our own with some way to get all the courses
     body = json.loads(request.data)
-    name = body.get('name')
     prefix = body.get('prefix')
-
     code = body.get('code')
+    name = body.get('name')
 
-    if code is None or name is None:
-        return failure_response("No code or name specified.", 400)
+    if code is None or prefix is None:
+        return failure_response("No code or prefix specified.", 400)
         
-    new_course = Course(code=code, name=name)
+    new_course = Course(code=code, prefix=prefix)
     db.session.add(new_course)
     db.session.commit()
     return success_response(new_course.serialize(), 201)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    #port = int(os.environ.get("PORT", 5000))
+    #app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000, debug=True)
