@@ -51,9 +51,10 @@ def get_course_by_id(course_id):
 
 #     return success_response(course.serialize())
 
-@app.route("/api/courses/prefix=<int:prefix_id>&code=<int:code_id>/")
+@app.route("/api/courses")
 # Returns dictionary of all courses with the code of code_id and prefix of prefix_id
-def get_course_by_code(prefix_id, code_id):
+def get_course(prefix_id, code_id):
+    # ?prefix=<int:prefix_id>&code=<int:code_id>
     if prefix is None and code is None:
         return failure_response("No code or prefix specified.")
     
@@ -77,7 +78,7 @@ def create_course(): # use preexisting database or create our own with some way 
     if code is None or prefix is None:
         return failure_response("No code or prefix specified.", 400)
         
-    new_course = Course(code=code, prefix=prefix)
+    new_course = Course(code=code, prefix=prefix, name=name)
     db.session.add(new_course)
     db.session.commit()
     return success_response(new_course.serialize(), 201)
