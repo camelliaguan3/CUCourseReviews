@@ -1,4 +1,4 @@
-# initial app.py, not finished. added get course routes for midpoint submission. will implement create courses.
+# midpoint app.py, not finished. added get course routes for midpoint submission. will implement create courses.
 import os
 import json
 from db import db
