@@ -11,8 +11,4 @@ Hack Challenge - CU Course Reviews, an IOS-based application that provides easy 
 
 2. Tables: Course, Review
 
-• IOS (John & Heysil)
-
-1. Has a working UI w/ hardcoded data (conformed to Codable for future backend merge)
-2. Uses 3 UICollectionViews
-3. Uses a form of navigation
+• IOS
