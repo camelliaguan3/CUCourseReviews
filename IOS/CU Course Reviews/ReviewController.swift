@@ -10,6 +10,7 @@ import UIKit
 class ReviewController: UIViewController {
     
     let bckImage = UIImageView()
+    let backButton = UIButton()
     // class information things
     let classInfoView = UIView()
     let classTitleLabel = UILabel()
@@ -55,6 +56,17 @@ class ReviewController: UIViewController {
         bckImage.clipsToBounds = false
         bckImage.contentMode = .scaleAspectFit
         view.addSubview(bckImage)
+        
+        //back Button
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.backgroundColor = .clear
+        backButton.setImage(UIImage(named: "back.png"), for: .normal)
+        backButton.layer.cornerRadius = 25
+        backButton.layer.shadowRadius = 3
+        backButton.layer.shadowOffset = .zero
+        backButton.layer.shadowOpacity = 0.20
+        backButton.addTarget(self, action: #selector(dismissViewController), for: .touchUpInside)
+        view.addSubview(backButton)
          
         //class information
         classInfoView.translatesAutoresizingMaskIntoConstraints = false
@@ -230,6 +242,10 @@ class ReviewController: UIViewController {
             bckImage.heightAnchor.constraint(equalToConstant: 600),
             bckImage.widthAnchor.constraint(equalToConstant: 600)
         ])
+        NSLayoutConstraint.activate([
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 34),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+        ])
         
         //CLASS INFORMATION CONSTRAINTS
         NSLayoutConstraint.activate([
@@ -353,6 +369,9 @@ class ReviewController: UIViewController {
 
         ])
         
+    }
+    @objc func dismissViewController() {
+        self.navigationController?.popViewController(animated: true)
     }
     
 

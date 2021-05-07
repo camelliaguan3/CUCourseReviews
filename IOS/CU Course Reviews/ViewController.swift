@@ -296,6 +296,6 @@ extension ViewController: UICollectionViewDelegate {
         else {
             reviewController.reviewB = reviewsData[indexPath.row]
         }
-        self.navigationController?.present(reviewController, animated: true)
+        self.navigationController?.pushViewController(reviewController, animated: true)
     }
 }
