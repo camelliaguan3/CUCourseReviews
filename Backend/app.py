@@ -1,10 +1,11 @@
-# midpoint app.py, not finished. added get course routes for midpoint submission. will implement create courses.
+# initial app.py, not finished. added get course routes for midpoint submission. will implement create courses.
 import os
 import json
 from db import db
 from db import Course, Review
 from flask import Flask
 from flask import request
+import requests
 
 app = Flask(__name__)
 db_filename = "cucoursereview.db"
@@ -17,11 +18,30 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+
 def success_response(data, code=200):
     return json.dumps({"success": True, "data": data}), code
 
 def failure_response(error, code=404):
     return json.dumps({"success": False, "error": error}), code
+
+# how to encorporate this into our database? Would it be better to call in get? post? When should this be called?
+def parse_class_api(prefix, code):
+    r_str = 'https://classes.cornell.edu/api/2.0/search/classes.json?roster=SP21&subject=' + prefix + '&q=' + str(code)
+    r = requests.get(r_str).json()
+    if r.get("status") == "error":
+        return None
+
+    data = r.get('data')
+    classes = data.get('classes')
+    new_courses = []
+    for c in classes:
+        prefix = r.get('subject')
+        code = int(r.get('catalogNbr'))
+        name = r.get('titleLong')
+        new_course.append({'prefix': prefix, 'code': code, 'name':name})
+
+    return new_course
 
 @app.route("/")
 @app.route("/api/courses/")
@@ -38,21 +58,8 @@ def get_course_by_id(course_id):
 
     return success_response(course.serialize())
 
-# @app.route("/api/courses/prefix/<int:prefix_id>/")
-# # Returns dictionary of all courses with the prefix of prefix_id
-# def get_course_by_prefix(prefix_id):
-#     course = Course.query.filter_by(prefix=prefix_id)  
-#     if course is None:
-#         return failure_response("Course not found.")
-    
-#     courses = []
-#     for i in course:
-#         courses += course.serialize()
-
-#     return success_response(course.serialize())
-
 @app.route("/api/courses")
-# Returns dictionary of all courses with the code of code_id and prefix of prefix_id
+# Returns dictionary of all courses with the code of code_id and prefix of prefix_id (unfinished)
 def get_course(prefix_id, code_id):
     # ?prefix=<int:prefix_id>&code=<int:code_id>
     if prefix is None and code is None:
