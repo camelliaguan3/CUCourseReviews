@@ -17,4 +17,9 @@ class CoreRatings {
         self.time = time
     }
 }
-
+// MARK: CONFORMED TO CODABLE - commented out until we're ready for backend
+//struct CoreRatings: Codable {
+//    let course : Course
+//    let difficulty : Int
+//    let time : Int
+//}

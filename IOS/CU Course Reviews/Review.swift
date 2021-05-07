@@ -19,6 +19,10 @@ class Review {
         self.review = review
         self.name = name
     }
-        
-    
 }
+// MARK: CONFORMED TO CODABLE - commented out until we're ready for backend
+// struct Review: Codable {
+//    let core : CoreRatings
+//    let review : String
+//    let name : String
+//}
