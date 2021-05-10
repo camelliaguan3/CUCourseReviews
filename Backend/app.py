@@ -39,9 +39,9 @@ def parse_class_api(prefix, code):
         prefix = r.get('subject')
         code = int(r.get('catalogNbr'))
         name = r.get('titleLong')
-        new_course.append({'prefix': prefix, 'code': code, 'name':name})
+        new_courses.append({'prefix': prefix, 'code': code, 'name':name})
 
-    return new_course
+    return new_courses
 
 @app.route("/")
 @app.route("/api/courses/")
