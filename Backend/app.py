@@ -26,20 +26,43 @@ def failure_response(error, code=404):
     return json.dumps({"success": False, "error": error}), code
 
 # how to encorporate this into our database? Would it be better to call in get? post? When should this be called?
-def parse_class_api(prefix, code):
-    r_str = 'https://classes.cornell.edu/api/2.0/search/classes.json?roster=SP21&subject=' + prefix + '&q=' + str(code)
+def parse_class_api(prefix, code = '', level = ''):
+    
+
+    if code == '':
+        codes = ''
+    else:
+        codes = '&q=' + str(code)
+
+    if level == '':
+        levels = ''
+    else:
+        levels = '&classLevels[]=' + str(level)
+    
+    r_str = 'https://classes.cornell.edu/api/2.0/search/classes.json?roster=SP21&subject=' + str(prefix) + codes + levels
     r = requests.get(r_str).json()
+
     if r.get("status") == "error":
         return None
 
     data = r.get('data')
+    if data is None:
+        return None
+
     classes = data.get('classes')
+    if classes is None:
+        return None
+
     new_courses = []
     for c in classes:
-        prefix = r.get('subject')
-        code = int(r.get('catalogNbr'))
-        name = r.get('titleLong')
-        new_courses.append({'prefix': prefix, 'code': code, 'name':name})
+        prefix = c.get('subject')
+        code = c.get('catalogNbr')
+        name = c.get('titleLong')
+
+        if prefix is None or code is None or name is None:
+            return None
+
+        new_courses.append({'prefix': prefix, 'code': int(code), 'name': name})
 
     return new_courses
 
