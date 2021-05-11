@@ -79,7 +79,7 @@ def get_course_by_id(course_id):
 
     return success_response(course.serialize())
 
-@app.route("/api/courses")
+@app.route("/api/courses/")
 # Returns dictionary of all courses with the code of code_id and prefix of prefix_id (unfinished)
 def get_course(prefix_id, code_id):
     # ?prefix=<int:prefix_id>&code=<int:code_id>
@@ -112,6 +112,7 @@ def create_course(): # use preexisting database or create our own with some way 
     return success_response(new_course.serialize(), 201)
 
 @app.route("/api/<int:course_id>/reviews/")
+# Returns all reviews for a particular course
 def get_reviews_of_course(course_id):
   course = Course.query.filter_by(id=course_id).first()
   if course is None: 
@@ -119,6 +120,9 @@ def get_reviews_of_course(course_id):
   return success_response([r.serialize() for r in course.reviews])
 
 @app.route("/api/<int:course_id>/reviews/", methods=["POST"])
+# Allows user to create a review for a particular course
+# Whenever a review is added, the average rating for that course is updated too
+# Whenever a review is added, the average hours per week for that course is updated too
 def create_review(course_id): 
   course = Course.query.filter_by(id=course_id).first()
   if course is None: 
@@ -131,10 +135,13 @@ def create_review(course_id):
     review = body.get('review'), 
     hours_per_week = body.get('hours_per_week')
   )
+  get_avg_rating(course_id)
+  get_avg_hours(course_id)
   db.session.add(new_review)
   db.session.commit()
   return success_response(new_review.serialize())
 
+# Calculates the average rating of the course based off all the reviews
 def get_avg_rating(course_id):
   course = Course.query.filter_by(id=course_id).first()
   if course is None:
@@ -151,6 +158,24 @@ def get_avg_rating(course_id):
     number_of_ratings += 1
   avg_rating = sum / number_of_ratings
   return course.rating.append(avg_rating)
+
+# Calculates the average hours per week of the course based off all the reviews
+def get_avg_hours(course_id):
+  course = Course.query.filter_by(id=course_id).first()
+  if course is None:
+    return failure_response("Course not found.")
+  reviews = get_reviews_of_course(course_id)
+  hours=[]
+  for r in reviews: 
+    hours_per_week = reviews.hours_per_week
+    hours = hours.append(hours_per_week)
+  number_of_people=0
+  sum = 0
+  for i in hours: 
+    sum += hours[i]
+    number_of_people += 1
+  avg_hours = sum / number_of_people
+  return course.hours_per_week.append(avg_hours)
 
 if __name__ == "__main__":
     #port = int(os.environ.get("PORT", 5000))
