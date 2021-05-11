@@ -1,4 +1,4 @@
-# initial app.py, not finished. added get course routes for midpoint submission. will implement create courses.
+# initial app.py, not finished. only thing that does not work is adding courses from Class Roster API into database
 import os
 import json
 from db import db
@@ -18,14 +18,13 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
 def success_response(data, code=200):
     return json.dumps({"success": True, "data": data}), code
 
 def failure_response(error, code=404):
     return json.dumps({"success": False, "error": error}), code
 
-# how to encorporate this into our database? Would it be better to call in get? post? When should this be called?
+# Parses courses to the format of the database
 def parse_class_api(prefix, code = ''):
     if code == '':
         codes = ''
@@ -34,36 +33,29 @@ def parse_class_api(prefix, code = ''):
     
     r_str = 'https://classes.cornell.edu/api/2.0/search/classes.json?roster=SP21&subject=' + str(prefix) + codes
     r = requests.get(r_str).json()
-
     if r.get("status") == "error":
         return None
-
     data = r.get('data')
     if data is None:
         return None
-
     classes = data.get('classes')
     if classes is None:
         return None
-
     new_courses = []
     for c in classes:
         prefix = c.get('subject')
         code = c.get('catalogNbr')
         name = c.get('titleLong')
-
         if prefix is None or code is None or name is None:
             return None
 
         new_courses.append({'prefix': prefix, 'code': int(code), 'name': name})
-
     return new_courses
 
 def add_course(body): # use preexisting database or create our own with some way to get all the courses
     prefix = body.get('prefix')
     code = body.get('code')
     name = body.get('name')
-
     new_course = Course(prefix=prefix, code=code, name=name)
     in_db = Course.query.filter_by(prefix=prefix, code=code, name=name)
 
@@ -84,7 +76,6 @@ def get_course_by_id(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if course is None:
         return failure_response("Course not found.")
-
     return success_response(course.serialize())
 
 @app.route("/api/course")
@@ -96,7 +87,6 @@ def get_course():
     # prefix is required
     if p == '': 
         return failure_response("No prefix specified.")
-
     # if the courses don't exist in the database
     course = parse_class_api(p, c)
 
@@ -113,10 +103,8 @@ def get_course():
         courses = Course.query.filter_by(prefix=p)
     else: 
         courses = Course.query.filter_by(prefix=p, code=c)
-    
     for i in courses:
         course_list.append(i.serialize())
-
     return success_response(course_list)
 
 @app.route("/api/courses/", methods=["POST"])
@@ -126,7 +114,6 @@ def create_course():
     prefix = body.get('prefix')
     code = body.get('code')
     name = body.get('name')
-
     if code is None or prefix is None:
         return failure_response("No code or prefix specified.", 400)
         
@@ -153,15 +140,16 @@ def create_review(course_id):
         return failure_response("Course not found.")
     body = json.loads(request.data)
     new_review = Review(
-        student_name = body.get('student name', 'Anonymous'), 
+        student_name = body.get('student_name', 'Anonymous'), 
         course_id = course_id, 
         rating = body.get('rating'), 
         review = body.get('review'), 
         hours_per_week = body.get('hours_per_week')
     )
+    db.session.add(new_review)
+    db.session.commit()
     course.rating = get_avg_rating(course_id)
     course.hours_per_week = get_avg_hours(course_id)
-    db.session.add(new_review)
     db.session.commit()
     return success_response(new_review.serialize())
 
@@ -170,34 +158,40 @@ def get_avg_rating(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if course is None:
         return failure_response("Course not found.")
-    reviews = get_reviews_of_course(course_id)
-    ratings=[]
+
+    reviews = [r.serialize() for r in course.reviews]
+    ratings = []
     for r in reviews: 
-        rating = reviews.rating
-        ratings = ratings.append(rating)
-    number_of_ratings=0
+        rating = r.get('rating')
+        ratings.append(rating)
+
+    number_of_ratings = 0
     sum = 0
     for i in ratings: 
-        sum += ratings[i]
+        sum += i
         number_of_ratings += 1
+
     avg_rating = sum / number_of_ratings
-    return success_response(avg_rating)
+    return avg_rating
 
 # Calculates the average hours per week of the course based off all the reviews
 def get_avg_hours(course_id):
     course = Course.query.filter_by(id=course_id).first()
     if course is None:
         return failure_response("Course not found.")
-    reviews = get_reviews_of_course(course_id)
+
+    reviews = [r.serialize() for r in course.reviews]
     hours=[]
     for r in reviews: 
-        hours_per_week = reviews.hours_per_week
-        hours = hours.append(hours_per_week)
+        hours_per_week = r.get('hours_per_week')
+        hours.append(hours_per_week)
+
     number_of_people=0
     sum = 0
     for i in hours: 
-        sum += hours[i]
+        sum += i
         number_of_people += 1
+
     avg_hours = sum / number_of_people
     return avg_hours
 

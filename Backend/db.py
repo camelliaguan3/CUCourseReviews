@@ -1,5 +1,3 @@
-# minor update, added text of review to Review Class 
-
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -9,6 +7,7 @@ class Course(db.Model):
   id = db.Column(db.Integer, primary_key = True)
   prefix = db.Column(db.String, nullable=False)
   code = db.Column(db.Integer, nullable=False)
+  name = db.Column(db.String, nullable=False)
   reviews = db.relationship('Review', cascade='delete')
   rating = db.Column(db.Integer, nullable=False)
   hours_per_week = db.Column(db.Integer, nullable=False)
@@ -16,6 +15,7 @@ class Course(db.Model):
   def __init__(self, **kwargs): 
     self.prefix = kwargs.get('prefix')
     self.code = kwargs.get('code')
+    self.name = kwargs.get('name')
     self.reviews = []
     self.rating = 0 
     self.hours_per_week = 0
@@ -25,6 +25,7 @@ class Course(db.Model):
       "id": self.id,
       "prefix": self.prefix, 
       "code": self.code, 
+      "name": self.name,
       "reviews": [r.serialize() for r in self.reviews],
       "rating": self.rating, 
       "hours_per_week": self.hours_per_week
@@ -51,7 +52,6 @@ class Review(db.Model):
     return {
       "id": self.id,
       "student_name": self.student_name, 
-      "course": self.course_id, 
       "rating": self.rating, 
       "review": self.review,
       "hours_per_week": self.hours_per_week
