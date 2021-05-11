@@ -27,8 +27,6 @@ def failure_response(error, code=404):
 
 # how to encorporate this into our database? Would it be better to call in get? post? When should this be called?
 def parse_class_api(prefix, code = '', level = ''):
-    
-
     if code == '':
         codes = ''
     else:
@@ -113,7 +111,53 @@ def create_course(): # use preexisting database or create our own with some way 
     db.session.commit()
     return success_response(new_course.serialize(), 201)
 
+@app.route("/api/<int:course_id>/reviews/")
+def get_reviews_of_course(course_id):
+  course = Course.query.filter_by(id=course_id).first()
+  if course is None: 
+    return failure_response("Course not found.")
+  return success_response([r.serialize() for r in course.reviews])
+
+@app.route("/api/<int:course_id>/reviews/", methods=["POST"])
+def create_review(course_id): 
+  course = Course.query.filter_by(id=course_id).first()
+  if course is None: 
+    return failure_response("Course not found.")
+  body = json.loads(request.data)
+  new_review = Review(
+    student_name = body.get('student name', 'Anonymous'), 
+    course_id = course_id, 
+    rating = body.get('rating'), 
+    review = body.get('review'), 
+    hours_per_week = body.get('hours_per_week')
+  )
+  db.session.add(new_review)
+  db.session.commit()
+  return success_response(new_review.serialize())
+
+def get_avg_rating(course_id):
+  course = Course.query.filter_by(id=course_id).first()
+  if course is None:
+    return failure_response("Course not found.")
+  reviews = get_reviews_of_course(course_id)
+  ratings=[]
+  for r in reviews: 
+    rating = reviews.rating
+    ratings = ratings.append(rating)
+  number_of_ratings=0
+  sum = 0
+  for i in ratings: 
+    sum += ratings[i]
+    number_of_ratings += 1
+  avg_rating = sum / number_of_ratings
+  return course.rating.append(avg_rating)
+
 if __name__ == "__main__":
     #port = int(os.environ.get("PORT", 5000))
     #app.run(host="0.0.0.0", port=port)
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+# create review, get review
+# create route that takes average of the ratings
+# incorporating stuff from API into our database
+# if the course isnt in the database, you add it to it else don't do anything
