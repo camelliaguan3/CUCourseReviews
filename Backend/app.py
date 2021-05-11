@@ -26,18 +26,13 @@ def failure_response(error, code=404):
     return json.dumps({"success": False, "error": error}), code
 
 # how to encorporate this into our database? Would it be better to call in get? post? When should this be called?
-def parse_class_api(prefix, code = '', level = ''):
+def parse_class_api(prefix, code = ''):
     if code == '':
         codes = ''
     else:
         codes = '&q=' + str(code)
-
-    if level == '':
-        levels = ''
-    else:
-        levels = '&classLevels[]=' + str(level)
     
-    r_str = 'https://classes.cornell.edu/api/2.0/search/classes.json?roster=SP21&subject=' + str(prefix) + codes + levels
+    r_str = 'https://classes.cornell.edu/api/2.0/search/classes.json?roster=SP21&subject=' + str(prefix) + codes
     r = requests.get(r_str).json()
 
     if r.get("status") == "error":
@@ -64,9 +59,22 @@ def parse_class_api(prefix, code = '', level = ''):
 
     return new_courses
 
+def add_course(body): # use preexisting database or create our own with some way to get all the courses
+    prefix = body.get('prefix')
+    code = body.get('code')
+    name = body.get('name')
+
+    new_course = Course(prefix=prefix, code=code, name=name)
+    in_db = Course.query.filter_by(prefix=prefix, code=code, name=name)
+
+    if in_db is None:
+        db.session.add(new_course)
+        db.session.commit()
+        return success_response(new_course.serialize(), 201)
+
 @app.route("/")
 @app.route("/api/courses/")
-# Returns dictionary of all courses
+# Returns dictionary of all courses (used for testing - the user cannot use this route)
 def get_courses():
     return success_response([c.serialize() for c in Course.query.all()])
 
@@ -79,26 +87,42 @@ def get_course_by_id(course_id):
 
     return success_response(course.serialize())
 
-@app.route("/api/courses/")
-# Returns dictionary of all courses with the code of code_id and prefix of prefix_id (unfinished)
-def get_course(prefix_id, code_id):
-    # ?prefix=<int:prefix_id>&code=<int:code_id>
-    if prefix is None and code is None:
-        return failure_response("No code or prefix specified.")
+@app.route("/api/course")
+# Returns dictionary of all courses with a code (not required) and prefix (required)
+def get_course():
+    p = request.args.get('prefix', '')
+    c = request.args.get('code', '')
+
+    # prefix is required
+    if p == '': 
+        return failure_response("No prefix specified.")
+
+    # if the courses don't exist in the database
+    course = parse_class_api(p, c)
+
+    if course is None: # if the course has invalid arguments
+        return failure_response("Invalid arguments.")
     
-    course = Course.query.filter_by(prefix=prefix_id, code=int(code_id))
-    if course is None:
-        return failure_response("Course not found.")
-
-    courses = []
+    # create new courses if there aren't any in the database (will not add courses if they exist)
     for i in course:
-        courses += course.serialize()
+        add_course(i)
 
-    return success_response(courses)
+    course_list = []
+    # get all of the courses from the db (should have existed already or have been added earlier)
+    if c == '':
+        courses = Course.query.filter_by(prefix=p)
+    else: 
+        courses = Course.query.filter_by(prefix=p, code=c)
+    
+    for i in courses:
+        course_list.append(i.serialize())
+
+    return success_response(course_list)
 
 @app.route("/api/courses/", methods=["POST"])
-def create_course(): # use preexisting database or create our own with some way to get all the courses
-    body = json.loads(request.data)
+# Creates a course (used for testing - the user cannot use this route)
+def create_course():
+    body = json.loads(request.data) 
     prefix = body.get('prefix')
     code = body.get('code')
     name = body.get('name')
@@ -114,68 +138,68 @@ def create_course(): # use preexisting database or create our own with some way 
 @app.route("/api/<int:course_id>/reviews/")
 # Returns all reviews for a particular course
 def get_reviews_of_course(course_id):
-  course = Course.query.filter_by(id=course_id).first()
-  if course is None: 
-    return failure_response("Course not found.")
-  return success_response([r.serialize() for r in course.reviews])
+    course = Course.query.filter_by(id=course_id).first()
+    if course is None: 
+        return failure_response("Course not found.")
+    return success_response([r.serialize() for r in course.reviews])
 
 @app.route("/api/<int:course_id>/reviews/", methods=["POST"])
 # Allows user to create a review for a particular course
 # Whenever a review is added, the average rating for that course is updated too
 # Whenever a review is added, the average hours per week for that course is updated too
 def create_review(course_id): 
-  course = Course.query.filter_by(id=course_id).first()
-  if course is None: 
-    return failure_response("Course not found.")
-  body = json.loads(request.data)
-  new_review = Review(
-    student_name = body.get('student name', 'Anonymous'), 
-    course_id = course_id, 
-    rating = body.get('rating'), 
-    review = body.get('review'), 
-    hours_per_week = body.get('hours_per_week')
-  )
-  get_avg_rating(course_id)
-  get_avg_hours(course_id)
-  db.session.add(new_review)
-  db.session.commit()
-  return success_response(new_review.serialize())
+    course = Course.query.filter_by(id=course_id).first()
+    if course is None: 
+        return failure_response("Course not found.")
+    body = json.loads(request.data)
+    new_review = Review(
+        student_name = body.get('student name', 'Anonymous'), 
+        course_id = course_id, 
+        rating = body.get('rating'), 
+        review = body.get('review'), 
+        hours_per_week = body.get('hours_per_week')
+    )
+    get_avg_rating(course_id)
+    get_avg_hours(course_id)
+    db.session.add(new_review)
+    db.session.commit()
+    return success_response(new_review.serialize())
 
 # Calculates the average rating of the course based off all the reviews
 def get_avg_rating(course_id):
-  course = Course.query.filter_by(id=course_id).first()
-  if course is None:
-    return failure_response("Course not found.")
-  reviews = get_reviews_of_course(course_id)
-  ratings=[]
-  for r in reviews: 
-    rating = reviews.rating
-    ratings = ratings.append(rating)
-  number_of_ratings=0
-  sum = 0
-  for i in ratings: 
-    sum += ratings[i]
-    number_of_ratings += 1
-  avg_rating = sum / number_of_ratings
-  return course.rating.append(avg_rating)
+    course = Course.query.filter_by(id=course_id).first()
+    if course is None:
+        return failure_response("Course not found.")
+    reviews = get_reviews_of_course(course_id)
+    ratings=[]
+    for r in reviews: 
+        rating = reviews.rating
+        ratings = ratings.append(rating)
+    number_of_ratings=0
+    sum = 0
+    for i in ratings: 
+        sum += ratings[i]
+        number_of_ratings += 1
+    avg_rating = sum / number_of_ratings
+    return course.rating.append(avg_rating)
 
 # Calculates the average hours per week of the course based off all the reviews
 def get_avg_hours(course_id):
-  course = Course.query.filter_by(id=course_id).first()
-  if course is None:
-    return failure_response("Course not found.")
-  reviews = get_reviews_of_course(course_id)
-  hours=[]
-  for r in reviews: 
-    hours_per_week = reviews.hours_per_week
-    hours = hours.append(hours_per_week)
-  number_of_people=0
-  sum = 0
-  for i in hours: 
-    sum += hours[i]
-    number_of_people += 1
-  avg_hours = sum / number_of_people
-  return course.hours_per_week.append(avg_hours)
+    course = Course.query.filter_by(id=course_id).first()
+    if course is None:
+        return failure_response("Course not found.")
+    reviews = get_reviews_of_course(course_id)
+    hours=[]
+    for r in reviews: 
+        hours_per_week = reviews.hours_per_week
+        hours = hours.append(hours_per_week)
+    number_of_people=0
+    sum = 0
+    for i in hours: 
+        sum += hours[i]
+        number_of_people += 1
+    avg_hours = sum / number_of_people
+    return course.hours_per_week.append(avg_hours)
 
 if __name__ == "__main__":
     #port = int(os.environ.get("PORT", 5000))
