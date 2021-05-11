@@ -1,4 +1,4 @@
-# minor update, added name
+# minor update, added text of review to Review Class 
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -9,16 +9,13 @@ class Course(db.Model):
   id = db.Column(db.Integer, primary_key = True)
   prefix = db.Column(db.String, nullable=False)
   code = db.Column(db.Integer, nullable=False)
-  name = db.Column(db.String, nullable=False)
-
   reviews = db.relationship('Review', cascade='delete')
-  # ratings associated with review figure this out in reviews class...will ratings be a variable
-  # since it is already included in the reviews for this course? 
+  rating = db.Column(db.Integer, nullable=False)
+  hours_per_week = db.Column(db.Integer, nullable=False)
 
   def __init__(self, **kwargs): 
     self.prefix = kwargs.get('prefix')
     self.code = kwargs.get('code')
-    self.name = kwargs.get('name')
     self.reviews = []
   
   def serialize(self):
@@ -26,7 +23,6 @@ class Course(db.Model):
       "id": self.id,
       "prefix": self.prefix, 
       "code": self.code, 
-      "name": self.name,
       "reviews": [r.serialize() for r in self.reviews]
     }
 
@@ -36,14 +32,15 @@ class Review(db.Model):
   student_name= db.Column(db.String)
   course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
   rating = db.Column(db.Integer, nullable=False)
+  review = db.Column(db.String, nullable=False)
   # hours_per_week = nullable??
   hours_per_week = db.Column(db.Integer, nullable=False)
-  review = db.Column(db.String, nullable=False)
 
   def __init__(self, **kwargs):
     self.student_name = kwargs.get('student_name')
     self.course_id = kwargs.get('course_id')
     self.rating = kwargs.get('rating')
+    self.review = kwargs.get('review')
     self.hours_per_week = kwargs.get('hours_per_week')
 
   def serialize(self): 
@@ -52,5 +49,6 @@ class Review(db.Model):
       "student_name": self.student_name, 
       "course": self.course_id, 
       "rating": self.rating, 
+      "review": self.review,
       "hours_per_week": self.hours_per_week
     }
