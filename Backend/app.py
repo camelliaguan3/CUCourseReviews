@@ -159,8 +159,8 @@ def create_review(course_id):
         review = body.get('review'), 
         hours_per_week = body.get('hours_per_week')
     )
-    get_avg_rating(course_id)
-    get_avg_hours(course_id)
+    course.rating = get_avg_rating(course_id)
+    course.hours_per_week = get_avg_hours(course_id)
     db.session.add(new_review)
     db.session.commit()
     return success_response(new_review.serialize())
@@ -181,7 +181,7 @@ def get_avg_rating(course_id):
         sum += ratings[i]
         number_of_ratings += 1
     avg_rating = sum / number_of_ratings
-    return course.rating.append(avg_rating)
+    return success_response(avg_rating)
 
 # Calculates the average hours per week of the course based off all the reviews
 def get_avg_hours(course_id):
@@ -199,7 +199,7 @@ def get_avg_hours(course_id):
         sum += hours[i]
         number_of_people += 1
     avg_hours = sum / number_of_people
-    return course.hours_per_week.append(avg_hours)
+    return avg_hours
 
 if __name__ == "__main__":
     #port = int(os.environ.get("PORT", 5000))
