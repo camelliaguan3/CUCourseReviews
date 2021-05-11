@@ -17,13 +17,17 @@ class Course(db.Model):
     self.prefix = kwargs.get('prefix')
     self.code = kwargs.get('code')
     self.reviews = []
+    self.rating = 0 
+    self.hours_per_week = 0
   
   def serialize(self):
     return {
       "id": self.id,
       "prefix": self.prefix, 
       "code": self.code, 
-      "reviews": [r.serialize() for r in self.reviews]
+      "reviews": [r.serialize() for r in self.reviews],
+      "rating": self.rating, 
+      "hours_per_week": self.hours_per_week
     }
 
 class Review(db.Model): 
