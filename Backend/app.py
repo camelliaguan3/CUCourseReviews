@@ -139,12 +139,26 @@ def create_review(course_id):
     if course is None: 
         return failure_response("Course not found.")
     body = json.loads(request.data)
+
+    name = body.get('student_name')
+    if name == '' or name is None:
+        name = 'Anonymous'
+
+    rate = body.get('rating')
+    revi = body.get('review')
+    diff = body.get('difficulty')
+    hour = body.get('hours_per_week')
+
+    if rate is None or revi is None or hour is None or diff is None:
+        return failure_response("Invalid arguments.")
+
     new_review = Review(
-        student_name = body.get('student_name', 'Anonymous'), 
+        student_name = name, 
         course_id = course_id, 
-        rating = body.get('rating'), 
-        review = body.get('review'), 
-        hours_per_week = body.get('hours_per_week')
+        rating = rate, 
+        review = revi, 
+        difficulty = diff,
+        hours_per_week = hour
     )
     db.session.add(new_review)
     db.session.commit()

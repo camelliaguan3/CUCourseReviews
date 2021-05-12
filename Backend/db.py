@@ -38,6 +38,7 @@ class Review(db.Model):
   course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
   rating = db.Column(db.Integer, nullable=False)
   review = db.Column(db.String, nullable=False)
+  difficulty = db.Column(db.Integer, nullable=False)
   # hours_per_week = nullable??
   hours_per_week = db.Column(db.Integer, nullable=False)
 
@@ -46,6 +47,7 @@ class Review(db.Model):
     self.course_id = kwargs.get('course_id')
     self.rating = kwargs.get('rating')
     self.review = kwargs.get('review')
+    self.difficulty = kwargs.get('difficulty')
     self.hours_per_week = kwargs.get('hours_per_week')
 
   def serialize(self): 
@@ -54,5 +56,6 @@ class Review(db.Model):
       "student_name": self.student_name, 
       "rating": self.rating, 
       "review": self.review,
+      "difficulty": self.difficulty,
       "hours_per_week": self.hours_per_week
     }
