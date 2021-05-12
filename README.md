@@ -7,7 +7,11 @@ Hack Challenge - CU Course Reviews, an IOS-based application that provides easy 
 
 • Backend (Camellia & Miranda): Has at least 2 working endpoints/routes and 2 tables 
 
-1. Endpoints: /api/courses/, /api/courses/\<int:course_id\>/
+1. Endpoints: 
+
+       GET /api/courses/, /api/courses/<int:course_id>/, /api/course?prefix=&code=, /api/<int:course_id>/reviews/
+
+       POST /api/courses/, /api/<int:course_id>/reviews/
 2. Tables: Course, Review
 
 • IOS (John & Heysil)
