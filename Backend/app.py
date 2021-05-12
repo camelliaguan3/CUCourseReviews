@@ -1,4 +1,3 @@
-# initial app.py, not finished. only thing that does not work is adding courses from Class Roster API into database
 import os
 import json
 from db import db
@@ -52,12 +51,13 @@ def parse_class_api(prefix, code = ''):
         new_courses.append({'prefix': prefix, 'code': int(code), 'name': name})
     return new_courses
 
-def add_course(body): # use preexisting database or create our own with some way to get all the courses
+# Adds a course to the database if it is not already in the database
+def add_course(body): 
     prefix = body.get('prefix')
     code = body.get('code')
     name = body.get('name')
     new_course = Course(prefix=prefix, code=code, name=name)
-    in_db = Course.query.filter_by(prefix=prefix, code=code, name=name)
+    in_db = Course.query.filter_by(prefix=prefix, code=code, name=name).first()
 
     if in_db is None:
         db.session.add(new_course)
