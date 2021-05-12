@@ -21,6 +21,7 @@
 		7F739CCD2644C76300AB6720 /* CoreRatings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CCC2644C76300AB6720 /* CoreRatings.swift */; };
 		7F739CCF2644C81900AB6720 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CCE2644C81900AB6720 /* Review.swift */; };
 		7F739CD12644C83200AB6720 /* ReviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CD02644C83200AB6720 /* ReviewController.swift */; };
+		7F739CD3264C1A2E00AB6720 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CD2264C1A2E00AB6720 /* SearchController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		7F739CCC2644C76300AB6720 /* CoreRatings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreRatings.swift; sourceTree = "<group>"; };
 		7F739CCE2644C81900AB6720 /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 		7F739CD02644C83200AB6720 /* ReviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewController.swift; sourceTree = "<group>"; };
+		7F739CD2264C1A2E00AB6720 /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 				187CB0AD2643450E000C5EF2 /* AppDelegate.swift */,
 				187CB0AF2643450E000C5EF2 /* SceneDelegate.swift */,
 				187CB0B12643450E000C5EF2 /* ViewController.swift */,
+				7F739CD2264C1A2E00AB6720 /* SearchController.swift */,
 				1886E328264B36EA0053EB6C /* ReviewCollectionViewCell.swift */,
 				1886E326264B083D0053EB6C /* AllReviewsController.swift */,
 				7F739CCC2644C76300AB6720 /* CoreRatings.swift */,
@@ -168,6 +171,7 @@
 				187CB0C62643A2F1000C5EF2 /* CoursesCollectionViewCell.swift in Sources */,
 				187CB0B22643450E000C5EF2 /* ViewController.swift in Sources */,
 				187CB0AE2643450E000C5EF2 /* AppDelegate.swift in Sources */,
+				7F739CD3264C1A2E00AB6720 /* SearchController.swift in Sources */,
 				18215AB22648934A003FF9BB /* CreateReviewController.swift in Sources */,
 				187CB0B02643450E000C5EF2 /* SceneDelegate.swift in Sources */,
 				1886E329264B36EA0053EB6C /* ReviewCollectionViewCell.swift in Sources */,

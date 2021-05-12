@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     let backgroundRed = UIImageView()
     let searchBar = UITextField()
     let searchBarEllipse = UIView()
-    let searchImage = UIImageView()
+    let searchImage = UIButton()
     let suggestionsLabel = UILabel()
     let viewedLabel = UILabel()
     let reviewedLabel = UILabel()
@@ -34,6 +34,7 @@ class ViewController: UIViewController {
     private var reviewsSugg: [Review] = []
     private var reviewsViewed: [Review] = []
     private var reviewsData: [Review] = []
+    var searchedCourses: [Course] = []
     
     // Constants
     private let coursesCellReuseIdentifier = "coursesCellReuseIdentifier"
@@ -90,7 +91,13 @@ class ViewController: UIViewController {
         view.addSubview(searchBar)
         // Creating the magnifying glass for the search bar
         searchImage.translatesAutoresizingMaskIntoConstraints = false
-        searchImage.image = UIImage(named:"Search")
+        searchImage.backgroundColor = .clear
+        searchImage.setImage(UIImage(named: "Search.png"), for: .normal)
+        searchImage.layer.cornerRadius = 25
+        searchImage.layer.shadowRadius = 3
+        searchImage.layer.shadowOffset = .zero
+        searchImage.layer.shadowOpacity = 0.20
+        searchImage.addTarget(self, action: #selector(dismissViewController), for: .touchUpInside)
         view.addSubview(searchImage)
         // Creating the suggestions label
         suggestionsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -247,6 +254,18 @@ class ViewController: UIViewController {
     @objc func emptySearchBar() {
         searchBar.text = ""
         searchBar.textColor = .black
+    }
+    @objc func dismissViewController() {
+        let searchController = SearchController()
+        for i in courseData {
+            if i.rosterName == searchBar.text {
+                searchedCourses.append(i)
+            }
+        }
+//        print(searchedCourses[0].rosterName)
+        searchController.courseData = searchedCourses
+        self.navigationController?.pushViewController(searchController, animated: true)
+        searchedCourses = []
     }
     
 }
