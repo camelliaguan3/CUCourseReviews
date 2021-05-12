@@ -18,6 +18,7 @@
 		187CB0CA2643AD8B000C5EF2 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187CB0C92643AD8B000C5EF2 /* HeaderView.swift */; };
 		1886E327264B083D0053EB6C /* AllReviewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1886E326264B083D0053EB6C /* AllReviewsController.swift */; };
 		1886E329264B36EA0053EB6C /* ReviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1886E328264B36EA0053EB6C /* ReviewCollectionViewCell.swift */; };
+		189AE406264C526A00A7C4CE /* TitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189AE405264C526A00A7C4CE /* TitleViewController.swift */; };
 		7F739CCD2644C76300AB6720 /* CoreRatings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CCC2644C76300AB6720 /* CoreRatings.swift */; };
 		7F739CCF2644C81900AB6720 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CCE2644C81900AB6720 /* Review.swift */; };
 		7F739CD12644C83200AB6720 /* ReviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F739CD02644C83200AB6720 /* ReviewController.swift */; };
@@ -38,6 +39,7 @@
 		187CB0C92643AD8B000C5EF2 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		1886E326264B083D0053EB6C /* AllReviewsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllReviewsController.swift; sourceTree = "<group>"; };
 		1886E328264B36EA0053EB6C /* ReviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCollectionViewCell.swift; sourceTree = "<group>"; };
+		189AE405264C526A00A7C4CE /* TitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleViewController.swift; sourceTree = "<group>"; };
 		7F739CCC2644C76300AB6720 /* CoreRatings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreRatings.swift; sourceTree = "<group>"; };
 		7F739CCE2644C81900AB6720 /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 		7F739CD02644C83200AB6720 /* ReviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewController.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 		187CB0AC2643450E000C5EF2 /* CU Course Reviews */ = {
 			isa = PBXGroup;
 			children = (
+				189AE405264C526A00A7C4CE /* TitleViewController.swift */,
 				187CB0AD2643450E000C5EF2 /* AppDelegate.swift */,
 				187CB0AF2643450E000C5EF2 /* SceneDelegate.swift */,
 				187CB0B12643450E000C5EF2 /* ViewController.swift */,
@@ -166,6 +169,7 @@
 				7F739CD12644C83200AB6720 /* ReviewController.swift in Sources */,
 				1886E327264B083D0053EB6C /* AllReviewsController.swift in Sources */,
 				187CB0C226434581000C5EF2 /* Course.swift in Sources */,
+				189AE406264C526A00A7C4CE /* TitleViewController.swift in Sources */,
 				7F739CCF2644C81900AB6720 /* Review.swift in Sources */,
 				187CB0CA2643AD8B000C5EF2 /* HeaderView.swift in Sources */,
 				187CB0C62643A2F1000C5EF2 /* CoursesCollectionViewCell.swift in Sources */,
