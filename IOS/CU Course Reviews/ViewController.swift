@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     let suggestionsLabel = UILabel()
     let viewedLabel = UILabel()
     let reviewedLabel = UILabel()
+    let logo = UIImageView()
     
     // Come back to later in case changing the font to bold doesn't work
 //    let suggestionsImage = UIImageView()
@@ -76,11 +77,16 @@ class ViewController: UIViewController {
         searchBarEllipse.layer.cornerRadius = 25
         searchBarEllipse.backgroundColor = UIColor.white
         view.addSubview(searchBarEllipse)
+        // Creating the logo
+        logo.translatesAutoresizingMaskIntoConstraints = false
+        logo.image = UIImage(named:"Logo")
+        view.addSubview(logo)
         // Creating the search bar on the home page
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.text = "Search Keywords e.g. INFO or FWS"
         searchBar.font = UIFont.boldSystemFont(ofSize: 14)
         searchBar.textColor = UIColor(displayP3Red: 204/255, green: 204/255, blue: 204/255, alpha: 1)
+        searchBar.addTarget(self, action: #selector(emptySearchBar), for: .touchDown)
         view.addSubview(searchBar)
         // Creating the magnifying glass for the search bar
         searchImage.translatesAutoresizingMaskIntoConstraints = false
@@ -208,6 +214,13 @@ class ViewController: UIViewController {
             reviewedLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 19),
             reviewedLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0)
         ])
+        
+        NSLayoutConstraint.activate([
+            logo.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 15),
+            logo.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            logo.heightAnchor.constraint(equalToConstant: 75),
+            logo.widthAnchor.constraint(equalToConstant: 75),
+        ])
     }
 
     func createDummyData() {
@@ -229,6 +242,11 @@ class ViewController: UIViewController {
         reviewsSugg = [review1!, review2!, review3!, review4!, review5!]
         reviewsViewed = [review3!, review5!, review2!, review1!, review4!]
         reviewsData = [review5!, review4!, review3!, review2!, review1!]
+    }
+    
+    @objc func emptySearchBar() {
+        searchBar.text = ""
+        searchBar.textColor = .black
     }
     
 }

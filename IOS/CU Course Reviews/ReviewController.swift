@@ -11,12 +11,25 @@ class ReviewController: UIViewController {
     
     let bckImage = UIImageView()
     let backButton = UIButton()
+    let logo = UIImageView() 
     // class information things
     let classInfoView = UIView()
     let classTitleLabel = UILabel()
     let dividerView = UIView()
     let classNameLabel = UILabel()
-    let bigStars = UIImageView()
+    
+    let ratingStar1 = UIImageView()
+    let ratingStar2 = UIImageView()
+    let ratingStar3 = UIImageView()
+    let ratingStar4 = UIImageView()
+    let ratingStar5 = UIImageView()
+
+    let reviewStar1 = UIImageView()
+    let reviewStar2 = UIImageView()
+    let reviewStar3 = UIImageView()
+    let reviewStar4 = UIImageView()
+    let reviewStar5 = UIImageView()
+
     //rating box things
     let ratingTitle = UILabel()
     let ratingView = UIView()
@@ -35,8 +48,8 @@ class ReviewController: UIViewController {
     let reviewView = UIView()
     let reviewLabel = UILabel()
     let reviewUser = UILabel()
-    let moreButton = UILabel()
-    let spacedStars = UIImageView()
+    let moreButton = UIButton()
+    let moreButtonImage = UIImageView()
     // write a review button
     let buttonView = UIButton()
     let buttonImage = UIImageView()
@@ -56,6 +69,11 @@ class ReviewController: UIViewController {
         bckImage.clipsToBounds = false
         bckImage.contentMode = .scaleAspectFit
         view.addSubview(bckImage)
+        
+        // Creating the logo at the bottom right hand side of the screen
+        logo.translatesAutoresizingMaskIntoConstraints = false
+        logo.image = UIImage(named:"Logo")
+        view.addSubview(logo)
         
         //back Button
         backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -83,11 +101,27 @@ class ReviewController: UIViewController {
         classTitleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         view.addSubview(classTitleLabel)
         
-        spacedStars.translatesAutoresizingMaskIntoConstraints = false
-        spacedStars.image = UIImage(named: "5-stars.png")
-        spacedStars.clipsToBounds = false
-        spacedStars.contentMode = .scaleAspectFit
-        view.addSubview(spacedStars)
+//        spacedStars.translatesAutoresizingMaskIntoConstraints = false
+//        spacedStars.image = UIImage(named: "5-stars.png")
+//        spacedStars.clipsToBounds = false
+//        spacedStars.contentMode = .scaleAspectFit
+//        view.addSubview(spacedStars)
+        
+        ratingStar1.image = UIImage(named: "Home Star")
+        ratingStar1.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ratingStar1)
+        ratingStar2.image = UIImage(named: "Home Star")
+        ratingStar2.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ratingStar2)
+        ratingStar3.image = UIImage(named: "Home Star")
+        ratingStar3.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ratingStar3)
+        ratingStar4.image = UIImage(named: "Home Star")
+        ratingStar4.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ratingStar4)
+        ratingStar5.image = UIImage(named: "Home Star")
+        ratingStar5.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ratingStar5)
         
         
         dividerView.translatesAutoresizingMaskIntoConstraints = false
@@ -201,17 +235,32 @@ class ReviewController: UIViewController {
         reviewUser.font = UIFont.systemFont(ofSize: 14)
         view.addSubview(reviewUser)
         
-        bigStars.translatesAutoresizingMaskIntoConstraints = false
-        bigStars.image = UIImage(named: "Review-Stars.png")
-        bigStars.clipsToBounds = false
-        bigStars.contentMode = .scaleAspectFit
-        view.addSubview(bigStars)
+        reviewStar1.image = UIImage(named: "Home Star")
+        reviewStar1.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(reviewStar1)
+        reviewStar2.image = UIImage(named: "Home Star")
+        reviewStar2.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(reviewStar2)
+        reviewStar3.image = UIImage(named: "Home Star")
+        reviewStar3.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(reviewStar3)
+        reviewStar4.image = UIImage(named: "Home Star")
+        reviewStar4.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(reviewStar4)
+        reviewStar5.image = UIImage(named: "Home Star")
+        reviewStar5.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(reviewStar5)
         
         moreButton.translatesAutoresizingMaskIntoConstraints = false
-        moreButton.text = "More"
-        moreButton.font = UIFont.boldSystemFont(ofSize: 14)
-        moreButton.textColor = UIColor(red: 0.831, green: 0, blue: 0, alpha: 1)
+        moreButton.backgroundColor = .clear
+        moreButton.setTitle("More", for: .normal)
+        moreButton.setTitleColor(UIColor(red: 0.831, green: 0, blue: 0, alpha: 1), for: .normal)
+        moreButton.addTarget(self, action: #selector(moreButtonPushed), for: .touchUpInside)
         view.addSubview(moreButton)
+        
+        moreButtonImage.translatesAutoresizingMaskIntoConstraints = false
+        moreButtonImage.image = UIImage(named: "More Button Arrow")
+        view.addSubview(moreButtonImage)
         
         //write review button
         buttonView.translatesAutoresizingMaskIntoConstraints = false
@@ -222,6 +271,7 @@ class ReviewController: UIViewController {
         buttonView.layer.shadowOpacity = 0.20
         buttonView.setTitle("Review This Course" , for: .normal)
         buttonView.setTitleColor(UIColor(red: 0.831, green: 0, blue: 0, alpha: 1), for: .normal)
+        buttonView.addTarget(self, action: #selector(createAReviewButtonPushed), for: .touchUpInside)
         view.addSubview(buttonView)
         
         //button image
@@ -258,10 +308,43 @@ class ReviewController: UIViewController {
             classTitleLabel.topAnchor.constraint(equalTo: classInfoView.topAnchor, constant: 20),
             classTitleLabel.leadingAnchor.constraint(equalTo: classInfoView.leadingAnchor, constant: 26),
         ])
+        
         NSLayoutConstraint.activate([
-            spacedStars.centerYAnchor.constraint(equalTo: classTitleLabel.centerYAnchor),
-            spacedStars.trailingAnchor.constraint(equalTo: classInfoView.trailingAnchor, constant: -33)
+            ratingStar5.centerYAnchor.constraint(equalTo: classTitleLabel.centerYAnchor),
+            ratingStar5.trailingAnchor.constraint(equalTo: classInfoView.trailingAnchor, constant: -35),
+            ratingStar5.heightAnchor.constraint(equalToConstant: 12),
+            ratingStar5.widthAnchor.constraint(equalToConstant: 12)
         ])
+        
+        NSLayoutConstraint.activate([
+            ratingStar4.centerYAnchor.constraint(equalTo: classTitleLabel.centerYAnchor),
+            ratingStar4.trailingAnchor.constraint(equalTo: ratingStar5.leadingAnchor, constant: -10),
+            ratingStar4.heightAnchor.constraint(equalToConstant: 12),
+            ratingStar4.widthAnchor.constraint(equalToConstant: 12)
+        ])
+        
+        NSLayoutConstraint.activate([
+            ratingStar3.centerYAnchor.constraint(equalTo: classTitleLabel.centerYAnchor),
+            ratingStar3.trailingAnchor.constraint(equalTo: ratingStar4.leadingAnchor, constant: -10),
+            ratingStar3.heightAnchor.constraint(equalToConstant: 12),
+            ratingStar3.widthAnchor.constraint(equalToConstant: 12)
+        ])
+        
+        NSLayoutConstraint.activate([
+            ratingStar2.centerYAnchor.constraint(equalTo: classTitleLabel.centerYAnchor),
+            ratingStar2.trailingAnchor.constraint(equalTo: ratingStar3.leadingAnchor, constant: -10),
+            ratingStar2.heightAnchor.constraint(equalToConstant: 12),
+            ratingStar2.widthAnchor.constraint(equalToConstant: 12)
+        ])
+        
+        NSLayoutConstraint.activate([
+            ratingStar1.centerYAnchor.constraint(equalTo: classTitleLabel.centerYAnchor),
+            ratingStar1.trailingAnchor.constraint(equalTo: ratingStar2.leadingAnchor, constant: -10),
+            ratingStar1.heightAnchor.constraint(equalToConstant: 12),
+            ratingStar1.widthAnchor.constraint(equalToConstant: 12)
+        ])
+        
+        
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(equalTo: classTitleLabel.bottomAnchor, constant: 4),
             dividerView.leadingAnchor.constraint(equalTo: classInfoView.leadingAnchor, constant: 26),
@@ -348,13 +431,45 @@ class ReviewController: UIViewController {
             reviewUser.bottomAnchor.constraint(equalTo: reviewView.bottomAnchor, constant: -10)
         ])
         NSLayoutConstraint.activate([
-            bigStars.centerYAnchor.constraint(equalTo: reviewUser.centerYAnchor),
-            bigStars.leadingAnchor.constraint(equalTo: reviewView.leadingAnchor, constant: 25)
+            reviewStar1.centerYAnchor.constraint(equalTo: reviewUser.centerYAnchor),
+            reviewStar1.leadingAnchor.constraint(equalTo: reviewView.leadingAnchor, constant: 25),
+            reviewStar1.heightAnchor.constraint(equalToConstant: 17),
+            reviewStar1.widthAnchor.constraint(equalToConstant: 17)
         ])
+        NSLayoutConstraint.activate([
+            reviewStar2.centerYAnchor.constraint(equalTo: reviewUser.centerYAnchor),
+            reviewStar2.leadingAnchor.constraint(equalTo: reviewStar1.trailingAnchor, constant: 3),
+            reviewStar2.heightAnchor.constraint(equalToConstant: 17),
+            reviewStar2.widthAnchor.constraint(equalToConstant: 17)
+        ])
+        NSLayoutConstraint.activate([
+            reviewStar3.centerYAnchor.constraint(equalTo: reviewUser.centerYAnchor),
+            reviewStar3.leadingAnchor.constraint(equalTo: reviewStar2.trailingAnchor, constant: 3),
+            reviewStar3.heightAnchor.constraint(equalToConstant: 17),
+            reviewStar3.widthAnchor.constraint(equalToConstant: 17)
+        ])
+        NSLayoutConstraint.activate([
+            reviewStar4.centerYAnchor.constraint(equalTo: reviewUser.centerYAnchor),
+            reviewStar4.leadingAnchor.constraint(equalTo: reviewStar3.trailingAnchor, constant: 3),
+            reviewStar4.heightAnchor.constraint(equalToConstant: 17),
+            reviewStar4.widthAnchor.constraint(equalToConstant: 17)
+        ])
+        NSLayoutConstraint.activate([
+            reviewStar5.centerYAnchor.constraint(equalTo: reviewUser.centerYAnchor),
+            reviewStar5.leadingAnchor.constraint(equalTo: reviewStar4.trailingAnchor, constant: 3),
+            reviewStar5.heightAnchor.constraint(equalToConstant: 17),
+            reviewStar5.widthAnchor.constraint(equalToConstant: 17)
+        ])
+        
         //more button
         NSLayoutConstraint.activate([
             moreButton.topAnchor.constraint(equalTo: reviewUser.bottomAnchor, constant: 20),
             moreButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -27)
+        ])
+        
+        NSLayoutConstraint.activate([
+            moreButtonImage.centerYAnchor.constraint(equalTo: moreButton.centerYAnchor, constant: 1),
+            moreButtonImage.leadingAnchor.constraint(equalTo: moreButton.trailingAnchor, constant: 2),
         ])
         //write review
         NSLayoutConstraint.activate([
@@ -369,7 +484,26 @@ class ReviewController: UIViewController {
 
         ])
         
+        NSLayoutConstraint.activate([
+            logo.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 15),
+            logo.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            logo.heightAnchor.constraint(equalToConstant: 75),
+            logo.widthAnchor.constraint(equalToConstant: 75),
+        ])
     }
+    
+    @objc func createAReviewButtonPushed() {
+        let CreateReviewController = CreateReviewController()
+        CreateReviewController.rosterName = reviewB.core.course.rosterName
+        self.present(CreateReviewController, animated: true, completion: nil)
+    }
+    
+    @objc func moreButtonPushed() {
+        let AllReviewsController = AllReviewsController()
+        AllReviewsController.titleLabel.text = "Reviews for \(reviewB.core.course.rosterName)"
+        self.navigationController?.pushViewController(AllReviewsController, animated: true)
+    }
+    
     @objc func dismissViewController() {
         self.navigationController?.popViewController(animated: true)
     }
