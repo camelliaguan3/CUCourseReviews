@@ -13,7 +13,7 @@ Hack Challenge - CU Course Reviews, an IOS-based application that provides easy 
 
        POST /api/courses/, /api/<int:course_id>/reviews/
 2. Tables: Course, Review (Review has relationship with Course)
-3. Heroku: https://hackchallenge53.herokuapp.com/
+3. Heroku: https://hackchallenge54.herokuapp.com/
 
 • IOS (John & Heysil)
 
