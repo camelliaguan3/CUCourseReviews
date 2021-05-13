@@ -15,7 +15,7 @@ Hack Challenge - CU Course Reviews, an IOS-based application that provides easy 
 2. Tables: Course, Review (Review has relationship with Course)
 3. Heroku: https://hackchallenge54.herokuapp.com/
 
-• IOS (John & Heysil)
+• IOS (John & Heysil) - https://github.com/hbaez972/CU-Course-Reviews-IOS
 
 1. Has a working UI w/ hardcoded data (conformed to Codable for future backend merge)
 2. Uses 3 UICollectionViews
