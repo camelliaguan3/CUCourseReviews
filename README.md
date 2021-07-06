@@ -1,5 +1,5 @@
 # CUCourseReviews
-Hack Challenge - CU Course Reviews, an IOS-based application that provides easy access to course reviews and allows students to review courses.
+Hack Challenge - CU Course Reviews, an IOS-based application that provides easy access to course reviews and allows students to review courses. This app won best interface for Hack Challenge, Spring '21.
 
 • Some screenshots of your app (highlight important features)
 
